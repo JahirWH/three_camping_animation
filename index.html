@@ -38,7 +38,7 @@
 
         // Configuración básica
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x1a1a2e, 10, 30);
+        // Sin niebla para mayor claridad
 
         const camera = new THREE.PerspectiveCamera(
             60,
@@ -50,38 +50,36 @@
 
         const renderer = new THREE.WebGLRenderer({ 
             antialias: true, 
-            alpha: true 
+            alpha: true  // Fondo transparente
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setClearColor(0x0a0a15, 1);
+        renderer.setClearColor(0x000000, 0); // Transparente total
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Suelo
-        const groundGeo = new THREE.CircleGeometry(20, 64);
-        const groundMat = new THREE.MeshStandardMaterial({ 
-            color: 0x2d3a2d,
-            roughness: 0.9,
-            metalness: 0
+        // Suelo invisible (solo para recibir sombras)
+        const groundGeo = new THREE.CircleGeometry(15, 64);
+        const groundMat = new THREE.ShadowMaterial({ 
+            opacity: 0.3  // Sombras sutiles
         });
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // Iluminación
-        const ambient = new THREE.AmbientLight(0x404060, 0.3);
+        // Iluminación optimizada
+        const ambient = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambient);
 
-        const moonLight = new THREE.DirectionalLight(0xb8c5ff, 0.4);
-        moonLight.position.set(10, 20, 5);
-        moonLight.castShadow = true;
-        moonLight.shadow.camera.left = -15;
-        moonLight.shadow.camera.right = 15;
-        moonLight.shadow.camera.top = 15;
-        moonLight.shadow.camera.bottom = -15;
-        scene.add(moonLight);
+        const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        mainLight.position.set(10, 15, 8);
+        mainLight.castShadow = true;
+        mainLight.shadow.camera.left = -10;
+        mainLight.shadow.camera.right = 10;
+        mainLight.shadow.camera.top = 10;
+        mainLight.shadow.camera.bottom = -10;
+        scene.add(mainLight);
 
         // TIPI
         function createTipi() {
@@ -119,7 +117,7 @@
                 roughness: 0.85,
                 side: THREE.DoubleSide,
                 transparent: true,
-                opacity: 0.95
+                opacity: 1
             });
             const fabric = new THREE.Mesh(fabricGeo, fabricMat);
             fabric.position.y = 2.75;
@@ -322,54 +320,32 @@
         scene.add(createSeatLog(0, 2.2, Math.PI / 2));
         scene.add(createSeatLog(0, 5, Math.PI / 2));
 
-        // ÁRBOLES
-        function createTree(x, z) {
-            const tree = new THREE.Group();
-
-            const trunkGeo = new THREE.CylinderGeometry(0.2, 0.3, 3, 8);
-            const trunkMat = new THREE.MeshStandardMaterial({ 
-                color: 0x3d2817 
-            });
-            const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-            trunk.position.y = 1.5;
-            trunk.castShadow = true;
-            tree.add(trunk);
-
-            const foliageGeo = new THREE.ConeGeometry(1.5, 3, 8);
-            const foliageMat = new THREE.MeshStandardMaterial({ 
-                color: 0x1a3d1a 
-            });
-            
-            const foliage1 = new THREE.Mesh(foliageGeo, foliageMat);
-            foliage1.position.y = 3.5;
-            foliage1.castShadow = true;
-            tree.add(foliage1);
-
-            const foliage2 = new THREE.Mesh(foliageGeo, foliageMat);
-            foliage2.position.y = 4.5;
-            foliage2.scale.set(0.7, 0.7, 0.7);
-            tree.add(foliage2);
-
-            tree.position.set(x, 0, z);
-            return tree;
-        }
-
-        scene.add(createTree(-8, -5));
-        scene.add(createTree(-6, -8));
-        scene.add(createTree(7, -6));
-        scene.add(createTree(8, -9));
-
-        // Control de mouse
+        // Control de rotación automática
+        let autoRotate = true;
         let mouseX = 0;
         let mouseY = 0;
         
         window.addEventListener('mousemove', (event) => {
             mouseX = (event.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            // Pausar rotación automática al mover el mouse
+            autoRotate = false;
+        });
+
+        // Reactivar rotación después de 3 segundos sin mover el mouse
+        let mouseTimeout;
+        window.addEventListener('mousemove', () => {
+            clearTimeout(mouseTimeout);
+            mouseTimeout = setTimeout(() => {
+                autoRotate = true;
+            }, 3000);
         });
 
         // Animación
         let time = 0;
+        const radius = 10; // Más cerca
+        const rotationSpeed = 0.08; // Rotación suave
+
         function animate() {
             requestAnimationFrame(animate);
             time += 0.016;
@@ -387,10 +363,18 @@
                 fireLight.distance = 10 + Math.sin(time * 2) * 1;
             }
 
-            // Cámara sigue el mouse suavemente
-            camera.position.x += (mouseX * 2 - camera.position.x + 8) * 0.05;
-            camera.position.y += (mouseY * 1 - camera.position.y + 5) * 0.05;
-            camera.lookAt(0, 1, 0);
+            // Rotación de cámara automática
+            if (autoRotate) {
+                const angle = time * rotationSpeed;
+                camera.position.x = Math.sin(angle) * radius;
+                camera.position.z = Math.cos(angle) * radius;
+                camera.position.y = 5;
+                camera.lookAt(0, 1, 0);
+            } else {
+                camera.position.x += (mouseX * 2 - camera.position.x + 8) * 0.05;
+                camera.position.y += (mouseY * 1 - camera.position.y + 5) * 0.05;
+                camera.lookAt(0, 1, 0);
+            }
 
             renderer.render(scene, camera);
         }

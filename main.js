@@ -1,6 +1,5 @@
 
         import * as THREE from 'three';
-        
 
         // Configuración básica
         const scene = new THREE.Scene();
@@ -369,4 +368,4 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-    
+  
