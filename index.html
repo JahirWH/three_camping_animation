@@ -1,105 +1,13 @@
-
-
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Integracion</title>
-        <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-
-
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
-            color: #222;
-        }
-
-        header {
-            background: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        main {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
-        }
-
-        h1, h2 {
-            margin-top: 0;
-        }
-
-        p {
-            line-height: 1.6;
-        }
-
-        /* Contenedor del canvas 3D */
-        #canvas-container {
-            width: 100%;
-            height: 350px;
-            background: transparent;
-            position: relative;
-            margin: 30px 0;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-    </style>
-</head>
-
-<body>
-
-    <header>
-        <h1>Mi Página de Práctica</h1>
-        <p>Integrando Three.js con HTML</p>
-    </header>
-
-    <main>
-        <h2>Bienvenido a mi sitio</h2>
-        <p>
-            Esta es una página simple para practicar la integración de un modelo 3D 
-            (en este caso, un tipi con fogata y troncos) usando Three.js.
-            El objetivo es aprender cómo mezclar contenido web normal con gráficos 3D.
-        </p>
-
-        <p>
-            Aquí debajo estará el contenedor donde se renderizará la escena de camping. 
-            Este espacio es completamente transparente para que puedas ajustar tu escena 
-            como si fuera una imagen PNG animada.
-        </p>
-
-        <div id="canvas-container"></div>
-
-
-        <h2>Contenido adicional</h2>
-        <p>
-            Puedes agregar más texto, imágenes, botones, secciones o lo que quieras.
-        </p>
-        <p>
-            Lo importante es que tu canvas 3D se integra dentro del flujo normal del documento HTML.
-        </p>
-    </main>
-
-    <footer>
-        © 2025 - Web de práctica con Three.js
-    </footer>
-
-    <!-- Tu archivo JS -->
-        <script type="module" src="/main.js"></script>
-
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>camping</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
