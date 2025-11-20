@@ -15,7 +15,7 @@ export default function CampingScene() {
     scene.fog = new THREE.Fog(0x1a1a2e, 10, 35);
 
     const camera = new THREE.PerspectiveCamera(
-      80,
+      90,
       window.innerWidth / window.innerHeight,
       0.3,
       1000
@@ -523,10 +523,108 @@ export default function CampingScene() {
       return sign;
     }
 
-    // CAMBIA ESTAS URLs POR LAS TUYAS
     scene.add(createWoodenSign('GitHub', -3.5, 3.5, 1, 'usu'));
     scene.add(createWoodenSign('CV', -5, 7, 1, ''));
     scene.add(createWoodenSign('Contacto', -6.5, 8.5, 1, ''));
+
+    const nuevoletrerogrande = [];
+      function createLargeSign(text, x, z, rotation = 0, url = '#') {
+        const largeSign = new THREE.Group();
+        // const letrero = new THREE.Group();
+        
+        const poleGeo = new THREE.CylinderGeometry(0.12, 0.15, 3, 8);
+        const poleMat = new THREE.MeshStandardMaterial({
+          color: 0x4a2f1a,
+          roughness: 0.9 
+        });
+        const pole = new THREE.Mesh(poleGeo, poleMat);
+        pole.position.y = 1.5;
+        pole.castShadow = true;
+        largeSign.add(pole);
+
+        const boardGeo = new THREE.BoxGeometry(2.5, 0.8, 0.15);
+        const boardMat = new THREE.MeshStandardMaterial({
+          color: 0x8b5a3c,
+          roughness: 0.8 
+        });
+        const board = new THREE.Mesh(boardGeo, boardMat);
+        board.position.y = 2.9;
+        board.castShadow = true;
+        largeSign.add(board);
+
+        const borderGeo = new THREE.BoxGeometry(4.6, 0.9, 0.1);
+        const borderMat = new THREE.MeshStandardMaterial({
+          color: 0x3d2415,
+          roughness: 0.9
+        });
+        const border = new THREE.Mesh(borderGeo, borderMat);
+        border.position.y = 2.9;
+        border.position.z = -0.01;
+        largeSign.add(border);
+        
+        // Canvas para el texto
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#2d1810';
+        ctx.font = 'bold 150px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text.toUpperCase(), canvas.width / 2 + 5, canvas.height / 2 + 5);
+        
+        ctx.fillStyle = '#f5e6d3';
+        ctx.fillText(text.toUpperCase(), canvas.width / 2, canvas.height / 2);
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.needsUpdate = true;
+
+        const textGeo = new THREE.PlaneGeometry(2.4, 0.7);
+        const textMat = new THREE.MeshBasicMaterial({
+          map: texture,
+          transparent: true,
+          side: THREE.DoubleSide
+        });
+        const textMesh = new THREE.Mesh(textGeo, textMat);
+        textMesh.position.y = 3.9;
+        textMesh.position.z = 0.08;
+        largeSign.add(textMesh);
+
+        // Clavos
+        const nailGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.07, 8);
+        const nailMat = new THREE.MeshStandardMaterial({
+          color: 0x1a1a1a,
+          metalness: 0.6 
+        });
+
+        const nailPositions = [
+          [-1.1, 3.3, 0.08],
+          [1.1, 3.3, 0.08],
+          [-1.1, 2.5, 0.08],
+          [1.1, 2.5, 0.08]
+        ];
+
+        nailPositions.forEach(pos => {
+          const nail = new THREE.Mesh(nailGeo, nailMat);
+          nail.position.set(...pos);
+          nail.rotation.x = Math.PI / 2;
+          largeSign.add(nail);
+        });
+
+        largeSign.position.set(x, 0, z);
+        largeSign.rotation.y = rotation;
+
+        board.userData = { clickable: true, url: url, text: text };
+        clickableObjects.push(board);
+        nuevoletrerogrande.push(largeSign);
+        return largeSign;
+      }
+
+      scene.add(createLargeSign('Bienvenidos a mi Campamento', 4, 6, 0.5, '#'));
+
 
     // Sistema de detección de clicks
     const raycaster = new THREE.Raycaster();
