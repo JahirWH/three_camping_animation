@@ -1,16 +1,71 @@
-# React + Vite
+# three_camping_animation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight Three.js project that renders a small animated camping scene (tent, campfire, environment lighting, simple particle/smoke effects and camera controls). Use this README to run, develop and extend the scene.
 
-Currently, two official plugins are available:
+## Features
+- WebGL 3D scene built with Three.js
+- Animated campfire and simple particle/smoke system
+- Directional and ambient lighting with a night-time atmosphere
+- Orbit camera controls and simple keyboard interaction
+- Easy-to-add assets (textures, models, sounds)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Quick start
 
-## React Compiler
+Prerequisites
+- Node.js (14+) and npm/yarn if you plan to use a local dev server or bundler
+- Modern browser (Chrome, Firefox)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Install & run (recommended)
+1. Clone the repo:
+    git clone <repo-url>
+2. Install dependencies (if project uses a bundler):
+    npm install
+3. Start dev server:
+    npm start
+4. Open http://localhost:3000 (or the port printed by the server)
 
-## Expanding the ESLint configuration
+If the project is a plain static site, you can open index.html in a browser or serve it:
+npx http-server -c-1 . -p 8080
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Usage
+- Orbit drag to rotate the camera
+- Scroll to zoom
+- Press keys (if implemented) for toggling effects (e.g., "F" for fire, "L" for lights)
+
+Adjust scene parameters in src/config.js (or the top of main script):
+- lighting intensity, fog density, particle count, animation speeds
+
+## Project structure (suggested)
+- index.html
+- src/
+  - main.js (scene bootstrap)
+  - scene.js (objects and animation loop)
+  - controls.js (camera/input)
+  - particles.js (fire/smoke)
+  - assets/ (textures, models, audio)
+- package.json
+- README.md
+
+## Development notes
+- Keep assets small and compressed for fast load
+- Use GLTF for models and KTX2 or basis for compressed textures where possible
+- Throttle particle counts for mobile
+- Prefer requestAnimationFrame loop tied to delta time for consistent animation
+
+## Building & Deploying
+- Build with your bundler (npm run build) or copy static files to a web host
+- Deploy to GitHub Pages, Netlify, or any static-hosting service
+
+## Contributing
+- Open an issue for bugs or feature requests
+- Send pull requests against the main branch
+- Keep changes small and focused; include brief tests or demos for new features
+
+## License
+MIT — see LICENSE file
+
+## Credits
+- Built with Three.js (https://threejs.org)
+- Any third-party assets should be credited inside assets/credits.md
+
+If you want, tell me which bundler or tooling you use (Vite / webpack / plain static) and I will add exact scripts and package.json snippets.

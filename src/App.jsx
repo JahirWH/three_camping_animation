@@ -623,7 +623,7 @@ export default function CampingScene() {
         return largeSign;
       }
 
-      scene.add(createLargeSign('Bienvenidos a mi Campamento', 4, 6, 0.5, '#'));
+      scene.add(createLargeSign('Bienvenidos a mi Campamento', 4, 4, 0.5, '#'));
 
 
     // Sistema de detección de clicks
