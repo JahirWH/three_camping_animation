@@ -20,7 +20,9 @@ export default function CampingScene() {
       0.3,
       1000
     );
-    camera.position.set(20, 9, 14);
+    // Cámara fija enfrente del letrero grande
+    camera.position.set(4, 2.5, -8);
+    camera.lookAt(4, 2.5, 0);
 
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true, 
@@ -528,7 +530,7 @@ export default function CampingScene() {
     scene.add(createWoodenSign('Contacto', -6.5, 8.5, 1, ''));
 
     const nuevoletrerogrande = [];
-      function createLargeSign(text, x, z, rotation = 0, url = '#') {
+      function createLargeSign(text, x, z, rotation = 2, url = '#') {
         const largeSign = new THREE.Group();
         // const letrero = new THREE.Group();
         
@@ -542,39 +544,39 @@ export default function CampingScene() {
         pole.castShadow = true;
         largeSign.add(pole);
 
-        const boardGeo = new THREE.BoxGeometry(2.5, 0.8, 0.15);
+        const boardGeo = new THREE.BoxGeometry(5, 2.5, 0.2);
         const boardMat = new THREE.MeshStandardMaterial({
           color: 0x8b5a3c,
           roughness: 0.8 
         });
         const board = new THREE.Mesh(boardGeo, boardMat);
-        board.position.y = 2.9;
+        board.position.y = 3;
         board.castShadow = true;
         largeSign.add(board);
 
-        const borderGeo = new THREE.BoxGeometry(4.6, 0.9, 0.1);
+        const borderGeo = new THREE.BoxGeometry(5.3, 2.8, 0.12);
         const borderMat = new THREE.MeshStandardMaterial({
           color: 0x3d2415,
           roughness: 0.9
         });
         const border = new THREE.Mesh(borderGeo, borderMat);
-        border.position.y = 2.9;
-        border.position.z = -0.01;
+        border.position.y = 3;
+        border.position.z = -0.02;
         largeSign.add(border);
         
         // Canvas para el texto
         const canvas = document.createElement('canvas');
-        canvas.width = 1024;
-        canvas.height = 512;
+        canvas.width = 1920;
+        canvas.height = 800;
         const ctx = canvas.getContext('2d');
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         ctx.fillStyle = '#2d1810';
-        ctx.font = 'bold 150px Arial';
+        ctx.font = 'bold 280px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(text.toUpperCase(), canvas.width / 2 + 5, canvas.height / 2 + 5);
+        ctx.fillText(text.toUpperCase(), canvas.width / 2 + 8, canvas.height / 2 + 8);
         
         ctx.fillStyle = '#f5e6d3';
         ctx.fillText(text.toUpperCase(), canvas.width / 2, canvas.height / 2);
@@ -582,15 +584,15 @@ export default function CampingScene() {
         const texture = new THREE.CanvasTexture(canvas);
         texture.needsUpdate = true;
 
-        const textGeo = new THREE.PlaneGeometry(2.4, 0.7);
+        const textGeo = new THREE.PlaneGeometry(4.8, 2.3);
         const textMat = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true,
           side: THREE.DoubleSide
         });
         const textMesh = new THREE.Mesh(textGeo, textMat);
-        textMesh.position.y = 3.9;
-        textMesh.position.z = 0.08;
+        textMesh.position.y = 3;
+        textMesh.position.z = 0.12;
         largeSign.add(textMesh);
 
         // Clavos
@@ -601,10 +603,10 @@ export default function CampingScene() {
         });
 
         const nailPositions = [
-          [-1.1, 3.3, 0.08],
-          [1.1, 3.3, 0.08],
-          [-1.1, 2.5, 0.08],
-          [1.1, 2.5, 0.08]
+          [-2.4, 4, 0.12],
+          [2.4, 4, 0.12],
+          [-2.4, 2, 0.12],
+          [2.4, 2, 0.12]
         ];
 
         nailPositions.forEach(pos => {
@@ -623,8 +625,7 @@ export default function CampingScene() {
         return largeSign;
       }
 
-      scene.add(createLargeSign('Bienvenidos a mi Campamento', 4, 4, 0.5, '#'));
-
+    scene.add(createLargeSign('Camp', 4, 4.5, Math.PI / 3 , '#'));
 
     // Sistema de detección de clicks
     const raycaster = new THREE.Raycaster();
@@ -697,16 +698,9 @@ export default function CampingScene() {
         fireLight.distance = 13 + Math.sin(time * 2) * 1;
       }
 
-      // Movimiento de cámara cuando el puntero está bloqueado
-      if (controls.isLocked) {
-        if (moveState.forward) controls.moveForward(speed * delta);
-        if (moveState.backward) controls.moveForward(-speed * delta);
-        if (moveState.left) controls.moveRight(-speed * delta);
-        if (moveState.right) controls.moveRight(speed * delta);
-        if (moveState.up) camera.position.y += speed * delta;
-        if (moveState.down) camera.position.y -= speed * delta;
-        camera.position.y = Math.max(0.5, camera.position.y); // no bajar bajo el suelo
-      }
+      // Cámara fija enfrente del letrero - sin movimiento
+      camera.position.set(4, 2.5, -8);
+      camera.lookAt(4, 2.5, 0);
 
       renderer.render(scene, camera);
     }
